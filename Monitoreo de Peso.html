@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Monitoreo de Peso</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
+
+    body {
+      background-color: #0b0b0f;
+      color: #ffffff;
+      font-family: 'Orbitron', sans-serif;
+      padding: 20px;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background-image: radial-gradient(circle at 20% 20%, #14141c, #0b0b0f);
+      animation: pulseBackground 10s infinite alternate;
+    }
+
+    @keyframes pulseBackground {
+      from { background-color: #0b0b0f; }
+      to { background-color: #12121a; }
+    }
+
+    .container {
+      max-width: 800px;
+      width: 100%;
+      animation: fadeIn 1s ease-in;
+    }
+
+    h1 {
+      text-align: center;
+      color: #00ffe7;
+      text-shadow: 0 0 10px #00ffe733;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .section {
+      background: linear-gradient(145deg, #1f1f2e, #0a0a14);
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 30px;
+      box-shadow: 0 0 15px #00ffe755;
+      resize: both;
+      overflow: auto;
+      min-height: 150px;
+    }
+
+    label {
+      font-size: 14px;
+    }
+
+    input, button, textarea, select {
+      max-width: 100%;
+      box-sizing: border-box;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      $1
+    }
+
+    .registro-comidas .comida-item {
+      background-color: #1c1c2b;
+      padding: 10px;
+      border-radius: 10px;
+      border-left: 4px solid #00ffe7;
+      margin-bottom: 10px;
+    }
+
+    .comparacion-fotos {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .comparacion-fotos img {
+      max-width: 100%;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #00ffe733;
+    }
+  </style>
+</head>
+<body>
+  <h1 style="margin-bottom: 40px; font-size: 2em; color: #00ffe7; text-shadow: 0 0 10px #00ffe799;">Monitoreo de Peso</h1>
+  <div class="container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 40px 60px; justify-items: center;">
+    
+
+    <div class="section" style="width: 100%; max-width: 400px;">
+<h2>Peso Actual</h2>
+
+        <label for="pesoInicial" style="margin-top: 10px; display: block;">Peso inicial (kg)</label>
+<input type="number" id="pesoInicial" style="width: 100%; padding: 10px; background-color: #191922; border: 1px solid #00ffe7; border-radius: 8px; font-family: 'Orbitron', sans-serif; color: white;" />
+
+        <label for="pesoActual" style="margin-top: 10px; display: block;">Peso actual (kg)</label>
+<input type="number" id="pesoActual" style="width: 100%; padding: 10px; background-color: #191922; border: 1px solid #00ffe7; border-radius: 8px; font-family: 'Orbitron', sans-serif; color: white;" />
+
+        <label for="pesoMeta" style="margin-top: 10px; display: block;">Meta de peso (kg)</label>
+<input type="number" id="pesoMeta" style="width: 100%; padding: 10px; background-color: #191922; border: 1px solid #00ffe7; border-radius: 8px; font-family: 'Orbitron', sans-serif; color: white;" />
+
+        <button onclick="guardarPeso()" style="width: 100%; padding: 10px; background-color: #00ffe7; color: #000; border: none; border-radius: 8px; font-family: 'Orbitron', sans-serif; font-weight: bold; cursor: pointer;">Guardar</button>
+
+        <div class="progress-bar" style="height: 25px; border-radius: 12px; background-color: #1c1c2b; margin-top: 15px; overflow: hidden;">
+  <div id="barraProgreso" class="progress" style="height: 100%; background: linear-gradient(90deg, #00ffe7, #0088ff); width: 100%; transition: width 0.5s ease;"></div>
+</div>
+        <p id="progresoTexto"></p>
+      <canvas id="pesoChart" width="100%" height="180" style="margin-bottom: 10px;"></canvas>
+<details id="listaPesos" style="margin-top: 10px; margin-bottom: 5px;">
+  <summary style="cursor:pointer; font-weight:bold;">Ver historial de pesos</summary>
+  <ul id="historialPesoLista" style="padding-left: 18px; font-size: 13px; margin-top: 10px;"></ul>
+</details>
+</div>
+
+    <div class="section" style="width: 100%; max-width: 400px;">
+  <h2>Ejercicios sugeridos</h2>
+  <p style="font-size: 13px; line-height: 1.5;">
+    Esta rutina está pensada para una persona de 22 años con un peso de 130 kg y antecedentes de una caída grave (20 metros) que afectó tendones y músculos de las piernas, sin fracturas. Es esencial tener <strong>alta médica</strong> y avanzar de forma progresiva.
+  </p>
+  <ul style="font-size: 13px; padding-left: 18px;">
+    <li>✔️ Requiere calentamiento y movilidad articular suave al inicio.</li>
+    <li>✔️ Detener si aparece dolor agudo o fatiga excesiva.</li>
+    <li>✔️ No realizar saltos, trotes ni impacto fuerte.</li>
+  </ul>
+  <p style="font-size: 13px; margin-top: 10px; line-height: 1.5;">
+    La rutina está dividida en fases con ejercicios específicos para cada día de la semana.
+  </p>
+  <a href="Rutina de Pierna - Rehabilitación.html" target="_blank" style="display: block; text-align: center; background-color: #00ffe7; color: #000; font-weight: bold; padding: 10px; margin-top: 15px; border-radius: 8px; text-decoration: none; font-family: 'Orbitron', sans-serif;">Ver rutina completa</a>
+</div>
+
+    <div class="section" style="width: 100%; max-width: 400px;">
+      <h2>Registro de Comidas</h2>
+      <label for="registroComida" style="margin-top: 10px; display: block;">Describí tu comida</label>
+<textarea id="registroComida" placeholder="Ej: Almorcé pollo con ensalada." style="width: 100%; padding: 10px; margin-top: 10px; background-color: #191922; border: 1px solid #00ffe7; border-radius: 8px; font-family: 'Orbitron', sans-serif; color: white;"></textarea>
+
+      <input type="file" accept="image/*" id="imagenComida" style="display: block; width: 100%; padding: 6px; margin-top: 10px; background-color: #191922; border: 1px solid #00ffe7; border-radius: 8px; color: white; font-family: 'Orbitron', sans-serif;">
+      <button onclick="guardarComida()" style="width: 100%; padding: 10px; margin-top: 10px; background-color: #00ffe7; color: #000; border: none; border-radius: 8px; font-family: 'Orbitron', sans-serif; font-weight: bold; cursor: pointer;">Guardar comida</button>
+
+      <details class="registro-comidas" id="listaComidas">
+        <summary style="cursor:pointer; font-weight:bold;">Ver comidas registradas</summary>
+      </details>
+    </div>
+
+    <div class="section" style="width: 100%; max-width: 400px;">
+      <h2>Comparación visual</h2>
+      <label for="fotoAntes" style="margin-top: 10px; display: block;">📸 Foto - Peso Inicial</label>
+      <input type="file" accept="image/*" id="fotoAntes" onchange="mostrarFotos()" />
+      <label for="fotoDespues" style="margin-top: 10px; display: block;">📸 Foto - Peso Deseado</label>
+      <input type="file" accept="image/*" id="fotoDespues" onchange="mostrarFotos()" />
+      <div class="comparacion-fotos" id="fotosComparacion"></div>
+    </div>
+  </div>
+  <script>
+    let ejercicios = [
+      "Press de banca con barra",
+      "Remo con mancuernas",
+      "Sentadillas sin peso",
+      "Planchas abdominales",
+      "Bicicleta estática",
+      "Caminata rápida",
+      "Burpees"
+    ];
+
+    let historialPesos = JSON.parse(localStorage.getItem("historialPesos") || "[]");
+
+    function guardarPeso() {
+      const inicial = parseFloat(document.getElementById("pesoInicial").value);
+      const actual = parseFloat(document.getElementById("pesoActual").value);
+      const meta = parseFloat(document.getElementById("pesoMeta").value);
+
+      if (!isNaN(inicial) && !isNaN(actual) && !isNaN(meta)) {
+        const porcentaje = ((inicial - actual) / (inicial - meta)) * 100;
+        document.getElementById("barraProgreso").style.width = `${Math.max(0, Math.min(porcentaje, 100)).toFixed(2)}%`;
+        document.getElementById("progresoTexto").textContent = `Avance: ${porcentaje.toFixed(2)}% hacia tu meta.`;
+
+        localStorage.setItem("pesoInicial", inicial);
+        localStorage.setItem("pesoActual", actual);
+        localStorage.setItem("pesoMeta", meta);
+
+        const fecha = new Date().toLocaleDateString();
+        historialPesos.push({ fecha, peso: actual });
+        localStorage.setItem("historialPesos", JSON.stringify(historialPesos));
+        actualizarGrafico();
+      }
+    }
+
+    function mostrarEjercicio() {
+  const dias = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
+  const rutina = {
+    lunes: "Equilibrio y propiocepción (ejercicios de estabilidad, control neuromuscular, bandas, elevaciones controladas).",
+    martes: "Resistencia y musculatura posterior (talones, prensa, caminata en cinta, curl femoral, estiramientos).",
+    miércoles: "Reeducación del movimiento (sentadillas suaves, control postural, estocadas asistidas).",
+    jueves: "Equilibrio y propiocepción (igual que lunes).",
+    viernes: "Resistencia y musculatura posterior (igual que martes).",
+    sábado: "Circuito funcional suave (marchas, movilidad, step lateral, estiramientos).",
+    domingo: "Descanso."
+  };
+  const hoy = dias[new Date().getDay()];
+  const texto = rutina[hoy] || "Día no reconocido.";
+  document.getElementById("diaRutina").innerText = `${hoy.charAt(0).toUpperCase() + hoy.slice(1)} – ${texto}`;
+}
+
+    function guardarComida() {
+      const texto = document.getElementById("registroComida").value;
+      const imagen = document.getElementById("imagenComida").files[0];
+      const fecha = new Date().toLocaleString();
+
+      const contenedor = document.getElementById("listaComidas");
+      const item = document.createElement("div");
+      item.className = "comida-item";
+      item.innerHTML = `<strong>${fecha}</strong><br>${texto}`;
+
+      if (imagen) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          item.innerHTML += `<br><img src='${e.target.result}' style='max-width:100%; border-radius:10px;'>`;
+          contenedor.appendChild(item);
+        };
+        reader.readAsDataURL(imagen);
+      } else {
+        contenedor.appendChild(item);
+      }
+    }
+
+    function mostrarFotos() {
+      const antes = document.getElementById("fotoAntes").files[0];
+      const despues = document.getElementById("fotoDespues").files[0];
+      const contenedor = document.getElementById("fotosComparacion");
+      contenedor.innerHTML = "";
+
+      const pesoInicial = document.getElementById("pesoInicial")?.value || "";
+      const pesoMeta = document.getElementById("pesoMeta")?.value || "";
+
+      if (antes) {
+        const reader1 = new FileReader();
+        reader1.onload = function (e) {
+          contenedor.innerHTML += `
+            <div style="text-align: center; width: 48%;">
+              <img src="${e.target.result}" alt="Antes">
+              <p>Peso Inicial: ${pesoInicial} kg</p>
+            </div>`;
+        };
+        reader1.readAsDataURL(antes);
+      }
+
+      if (despues) {
+        const reader2 = new FileReader();
+        reader2.onload = function (e) {
+          contenedor.innerHTML += `
+            <div style="text-align: center; width: 48%;">
+              <img src="${e.target.result}" alt="Después">
+              <p>Peso Deseado: ${pesoMeta} kg</p>
+            </div>`;
+        };
+        reader2.readAsDataURL(despues);
+      }
+    }
+
+    function actualizarGrafico() {
+      const historialLista = document.getElementById("historialPesoLista");
+      if (historialLista) historialLista.innerHTML = historialPesos.map(p => `<li>${p.fecha} – ${p.peso} kg</li>`).join("");
+      const ctx = document.getElementById("pesoChart").getContext("2d");
+      const labels = historialPesos.map(p => p.fecha);
+      const datos = historialPesos.map(p => p.peso);
+
+      if (window.pesoChart) window.pesoChart.destroy();
+
+      window.pesoChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Peso (kg)',
+            data: datos,
+            borderColor: '#00ffe7',
+            backgroundColor: 'transparent',
+            tension: 0.3
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            y: {
+              beginAtZero: false
+            }
+          }
+        }
+      });
+    }
+
+    window.onload = () => {
+      mostrarEjercicio();
+      document.getElementById("pesoInicial").value = localStorage.getItem("pesoInicial") || "";
+      document.getElementById("pesoActual").value = localStorage.getItem("pesoActual") || "";
+      document.getElementById("pesoMeta").value = localStorage.getItem("pesoMeta") || "";
+      actualizarGrafico();
+      guardarPeso();
+    };
+  </script>
+</body>
+</html>

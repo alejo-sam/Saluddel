@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rutina de Pierna - Rehabilitación</title>
+  <style>
+    body {
+      background-color: #111;
+      color: #fff;
+      font-family: 'Segoe UI', sans-serif;
+      padding: 20px;
+    }
+    h1, h2 {
+      text-align: center;
+      color: #00ffd5;
+    }
+    .dia {
+      background-color: #222;
+      margin: 20px auto;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 0 10px rgba(0, 255, 200, 0.5);
+      max-width: 800px;
+    }
+    .ejercicio {
+      margin-bottom: 10px;
+    }
+    .nota {
+      color: #aaa;
+      font-size: 0.9em;
+    }
+    .hoy {
+      border: 2px solid #00ffd5;
+      box-shadow: 0 0 20px rgba(0, 255, 200, 0.8);
+    }
+  </style>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const dias = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
+      const hoy = new Date().getDay();
+      const secciones = document.querySelectorAll(".dia");
+      secciones.forEach((sec) => {
+        if (sec.innerText.toLowerCase().includes(dias[hoy])) {
+          sec.classList.add("hoy");
+        }
+      });
+    });
+  </script>
+</head>
+<body>
+  <h1>Rutina de Pierna - Rehabilitación</h1>
+  <h2>Hombre de 22 años - 130kg - Post Caída</h2>
+
+  <div class="dia">
+    <h2>Todos los Días - Calentamiento y Enfriamiento</h2>
+    <div class="ejercicio">Bicicleta estática - 5 min</div>
+    <div class="ejercicio">Movilidad de tobillos, rodillas y caderas - 5 min</div>
+    <div class="ejercicio">Respiración profunda y estiramientos suaves al final</div>
+  </div>
+
+  <div class="dia">
+    <h2>Lunes y Jueves - Estabilidad</h2>
+    <div class="ejercicio">Equilibrio en un solo pie - 3x30s por pierna <span class="nota">(progresar con ojos cerrados)</span></div>
+    <div class="ejercicio">Caminar en línea recta sobre colchoneta - 3x10m</div>
+    <div class="ejercicio">Step-ups bajos (10-15cm) - 3x12 por pierna</div>
+    <div class="ejercicio">Bandas elásticas tobillo - 3x15</div>
+    <div class="ejercicio">Elevación de talones - 3x12</div>
+  </div>
+
+  <div class="dia">
+    <h2>Martes y Viernes - Resistencia</h2>
+    <div class="ejercicio">Elevación de talones sentado - 3x15</div>
+    <div class="ejercicio">Prensa de piernas - 3x10</div>
+    <div class="ejercicio">Curl femoral - 3x12</div>
+    <div class="ejercicio">Caminata en cinta con inclinación leve - 10-15 min</div>
+    <div class="ejercicio">Estiramientos gemelo/tobillo - 3x30s por pierna</div>
+  </div>
+
+  <div class="dia">
+    <h2>Miércoles - Reeducación</h2>
+    <div class="ejercicio">Marcha en el lugar lenta - 3x1 min</div>
+    <div class="ejercicio">Sentadillas isométricas contra la pared - 3x20s</div>
+    <div class="ejercicio">Transferencias de peso izq-der - 3x20</div>
+    <div class="ejercicio">Estocadas asistidas - 3x8 por pierna</div>
+    <div class="ejercicio">Caminata lateral con banda elástica - 3x10 pasos</div>
+  </div>
+
+  <div class="dia">
+    <h2>Sábado - Circuito Funcional</h2>
+    <div class="ejercicio">Caminata lenta + movilidad de tobillos - 5 min</div>
+    <div class="ejercicio">Circuito (3 vueltas):</div>
+    <div class="ejercicio">- Elevación de talones - 12 reps</div>
+    <div class="ejercicio">- Step lateral - 8 reps por lado</div>
+    <div class="ejercicio">- Marcha en el lugar - 30s</div>
+    <div class="ejercicio">- Estiramiento de gemelo/sóleo - 20s por pierna</div>
+  </div>
+</body>
+</html>
